@@ -14,15 +14,19 @@ df_sample = df.sample(n=3001, random_state=55006)
 # Sidebar for filters
 st.sidebar.title("Filters")
 
-# Filter by Import or Export
-import_export_filter = st.sidebar.selectbox("Select Transaction Type", options=["All", "Import", "Export"])
-if import_export_filter != "All":
-    df_sample = df_sample[df_sample['Import_Export'] == import_export_filter]
+# Multiselect Filter by Import or Export
+import_export_filter = st.sidebar.multiselect(
+    "Select Transaction Type", options=df_sample['Import_Export'].unique(), default=df_sample['Import_Export'].unique()
+)
+if import_export_filter:
+    df_sample = df_sample[df_sample['Import_Export'].isin(import_export_filter)]
 
-# Filter by Shipping Method
-shipping_method_filter = st.sidebar.selectbox("Select Shipping Method", options=["All"] + df_sample['Shipping_Method'].unique().tolist())
-if shipping_method_filter != "All":
-    df_sample = df_sample[df_sample['Shipping_Method'] == shipping_method_filter]
+# Multiselect Filter by Shipping Method
+shipping_method_filter = st.sidebar.multiselect(
+    "Select Shipping Method", options=df_sample['Shipping_Method'].unique(), default=df_sample['Shipping_Method'].unique()
+)
+if shipping_method_filter:
+    df_sample = df_sample[df_sample['Shipping_Method'].isin(shipping_method_filter)]
 
 # Title for the dashboard
 st.title('Dashboard for Imports and Exports')
